@@ -4,10 +4,12 @@ import java.util.Scanner;
 public class Tarea {
     private int id;
     private String titulo;
+    private String comentario;
 
-    public Tarea(int id, String titulo) {
+    public Tarea(int id, String titulo, String comentario) {
         this.id = id;
         this.titulo = titulo;
+        this.comentario = comentario;
     }
 
     public int getId() {
@@ -16,6 +18,22 @@ public class Tarea {
 
     public String getTitulo() {
         return titulo;
+    }
+
+    public String getComentario(){
+        return comentario;
+    }
+
+    public void nuevoComentario(String newComentario){
+        comentario = newComentario;
+    }
+
+    public void modificacionComentario(String newComentario){
+        comentario = comentario+","+newComentario;
+    }
+
+    public void eliminaComentario(){
+        comentario = "";
     }
 }
 
@@ -34,7 +52,7 @@ class GestorDeTareas {
     public void listarTareas() {
         System.out.println("Lista de tareas:");
         for (Tarea tarea : listaTareas) {
-            System.out.println(tarea.getId() + ". " + tarea.getTitulo());
+            System.out.println(tarea.getId() + ". " + tarea.getTitulo()+": "+tarea.getComentario());
         }
     }
 
@@ -49,6 +67,68 @@ class GestorDeTareas {
         System.out.println("No se encontró una tarea con ese ID.");
     }
 
+    public void añadirComentario(int id, Scanner scanner){
+        System.out.println("Introduzca el comentario que quieras añadir a la tarea.");
+        String comentario;
+        scanner.nextLine();
+        comentario = scanner.nextLine();
+        listaTareas.get(id).nuevoComentario(comentario);
+    }
+
+    public void modificarComentario(int id, Scanner scanner){
+        System.out.println("Introduce el texto que quieras añadir al comentario");
+        String comentario1;
+        scanner.nextLine();
+        comentario1 = scanner.nextLine();
+        listaTareas.get(id).modificacionComentario(comentario1);
+    }
+    public void eliminarComentario(int id, Scanner scanner){
+        listaTareas.get(id).eliminaComentario();
+    }
+
+    public void gestionarComentarios(Scanner scanner){
+        int gestionComentario;
+        do{
+            System.out.println("Elige la opcion de gestion de comentario que quieras realizar.");
+            System.out.println("\nMenú: ");
+            System.out.println("1. Añadir un comentario nuevo.");
+            System.out.println("2. Modificar el comentario actual.");
+            System.out.println("3. Eliminar el comentario actual.");
+            System.out.println("0. Salir.");
+
+            System.out.println("Ingrese la opción deseada: ");
+            gestionComentario= scanner.nextInt();
+
+            switch (gestionComentario) {
+                case 1:
+                    System.out.println("Introduce el número de la tarea que quieras modificar.");
+                    int id;
+                    id = scanner.nextInt();
+                    añadirComentario(id, scanner);
+                    break;
+
+                case 2:
+                    System.out.println("Introduce el número de la tarea que quieras modificar.");
+                    int id1;
+                    id1 = scanner.nextInt();
+                    modificarComentario(id1, scanner);
+                    break;
+
+                case 3:
+                    System.out.println("Introduce el número de la tarea que quieras modificar.");
+                    int id2;
+                    id2 = scanner.nextInt();
+                    eliminarComentario(id2, scanner);
+                    break;
+
+                case 0: 
+                    System.out.println("Saliendo del gestor de comentarios");
+                    break;
+                default:
+                    break;
+            }
+        }while(gestionComentario != 0);
+    }
 
 
     public static void main(String[] args) {
@@ -61,6 +141,7 @@ class GestorDeTareas {
             System.out.println("1. Agregar tarea");
             System.out.println("2. Listar tareas");
             System.out.println("3. Eliminar tarea");
+            System.out.println("5. Gestionar comentarios");
             System.out.println("0. Salir");
             System.out.print("Ingrese la opción: ");
             opcion = scanner.nextInt();
@@ -70,9 +151,11 @@ class GestorDeTareas {
                     System.out.print("Ingrese el ID de la tarea: ");
                     int id = scanner.nextInt();
                     System.out.print("Ingrese el título de la tarea: ");
-                    scanner.nextLine(); 
+                    scanner.nextLine();
                     String titulo = scanner.nextLine();
-                    Tarea nuevaTarea = new Tarea(id, titulo);
+                    System.out.println("Ingrese si desea un comentario: ");
+                    String comentario = scanner.nextLine();
+                    Tarea nuevaTarea = new Tarea(id, titulo, comentario);
                     gestor.agregarTarea(nuevaTarea);
                     break;
 
@@ -88,6 +171,10 @@ class GestorDeTareas {
 
                 case 0:
                     System.out.println("Saliendo del programa. ¡Hasta luego!");
+                    break;
+
+                case 5:
+                        gestor.gestionarComentarios(scanner);
                     break;
 
                 default:
