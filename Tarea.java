@@ -4,18 +4,31 @@ import java.util.Scanner;
 public class Tarea {
     private int id;
     private String titulo;
+    private Prioridad prioridad;
 
-    public Tarea(int id, String titulo) {
+    public Tarea(int id, String titulo, Prioridad prioridad) {
         this.id = id;
         this.titulo = titulo;
+        this.prioridad = prioridad;
     }
+    public enum Prioridad{
+            BAJA,
+            MEDIA,
+            ALTA
+        }
 
+    public void setPrioridad(Prioridad prioridad){
+        this.prioridad = prioridad;
+    }
     public int getId() {
         return id;
     }
 
     public String getTitulo() {
         return titulo;
+    }
+    public Prioridad getPrioridad(){
+        return prioridad;
     }
 }
 
@@ -34,7 +47,7 @@ class GestorDeTareas {
     public void listarTareas() {
         System.out.println("Lista de tareas:");
         for (Tarea tarea : listaTareas) {
-            System.out.println(tarea.getId() + ". " + tarea.getTitulo());
+            System.out.println(tarea.getId() + ". " + tarea.getTitulo() + " - Prioridad: " + tarea.getPrioridad());
         }
     }
 
@@ -48,12 +61,16 @@ class GestorDeTareas {
         }
         System.out.println("No se encontró una tarea con ese ID.");
     }
-
-
+    public void agregarTarea(Tarea tarea, Tarea.Prioridad prioridad) {
+         tarea.setPrioridad(prioridad);
+         listaTareas.add(tarea);
+         System.out.println("Tarea agregada con éxito.");
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         GestorDeTareas gestor = new GestorDeTareas();
+        
 
         int opcion;
         do {
@@ -67,14 +84,17 @@ class GestorDeTareas {
 
             switch (opcion) {
                 case 1:
-                    System.out.print("Ingrese el ID de la tarea: ");
-                    int id = scanner.nextInt();
-                    System.out.print("Ingrese el título de la tarea: ");
-                    scanner.nextLine(); 
-                    String titulo = scanner.nextLine();
-                    Tarea nuevaTarea = new Tarea(id, titulo);
-                    gestor.agregarTarea(nuevaTarea);
-                    break;
+                        System.out.print("Ingrese el ID de la tarea: ");
+                        int id = scanner.nextInt();
+                        System.out.print("Ingrese el título de la tarea: ");
+                        scanner.nextLine();
+                        String titulo = scanner.nextLine();
+                        System.out.print("Ingrese la prioridad de la tarea (BAJA, MEDIA, ALTA): ");
+                        String prioridadStr = scanner.nextLine();
+                        Tarea.Prioridad prioridad = Tarea.Prioridad.valueOf(prioridadStr.toUpperCase()); 
+                        Tarea nuevaTarea = new Tarea(id, titulo, prioridad);
+                        gestor.agregarTarea(nuevaTarea);
+                        break;
 
                 case 2:
                     gestor.listarTareas();
@@ -85,7 +105,7 @@ class GestorDeTareas {
                     int idEliminar = scanner.nextInt();
                     gestor.eliminarTarea(idEliminar);
                     break;
-
+                    
                 case 0:
                     System.out.println("Saliendo del programa. ¡Hasta luego!");
                     break;
